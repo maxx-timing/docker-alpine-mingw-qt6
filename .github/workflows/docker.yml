@@ -7,14 +7,22 @@ on:
 
 jobs:
   docker:
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - i686
+          - x86_64
+    name: "Docker (${{matrix.arch}})"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Log In at ghcr.io
         run: echo "${{secrets.GITHUB_TOKEN}}" | docker login ghcr.io -u msrd0 --password-stdin
       - name: Build and Push image to ghcr.io
         run: |
-          image="ghcr.io/maxx-timing/alpine-mingw-qt6"
-          docker build . --pull --tag "$image"
-          echo "Pushing $image ..."
+          set -x
+          
+          image="ghcr.io/maxx-timing/alpine-mingw-qt6:${{matrix.arch}}"
+          docker build . --pull --tag "$image" --build-arg TARGET_ARCH=${{matrix.arch}}
           docker push "$image"
