@@ -1,11 +1,11 @@
-FROM alpine:3.19
+FROM alpine:3.20
 SHELL ["/bin/ash", "-exuo", "pipefail", "-c"]
 
 RUN mkdir /src
 WORKDIR /src
 
 # some versions
-ARG QTVER=6.6.1
+ARG QTVER=6.6.3
 ARG QTPKGREL=0
 
 ARG TARGET_ARCH=x86_64
